@@ -112,7 +112,7 @@
       }
     };
 
-    // ====== 標準 7 區段設計（共 180 題：20, 20, 20, 40, 20, 20, 40）======
+    // ====== 標準 7 區段設計（共 180 題：B1練習, B2練習, B3練習[計分], B4正式[計分], B5互換練習, B6練習[計分], B7正式[計分]）======
     function buildBlocks(isReversedFirst) {
       const firstT = isReversedFirst ? "targetB" : "targetA";
       const secondT = isReversedFirst ? "targetA" : "targetB";
@@ -122,17 +122,17 @@
       const condTest2     = isReversedFirst ? "congruent_test"       : "incongruent_test";
 
       return [
-        { block: 1, name: "區段 1 / 7（練習）", trials: 20, condition: "practice_target",
+        { block: 1, name: "區段 1 / 7（概念練習）", trials: 20, condition: "practice_target",
           left: [firstT], right: [secondT], mix: "target" },
-        { block: 2, name: "區段 2 / 7（練習）", trials: 20, condition: "practice_attr",
+        { block: 2, name: "區段 2 / 7（屬性練習）", trials: 20, condition: "practice_attr",
           left: ["attrA"], right: ["attrB"], mix: "attr" },
-        { block: 3, name: "區段 3 / 7（正式測驗）", trials: 20, condition: condPractice1,
+        { block: 3, name: "區段 3 / 7（練習）", trials: 20, condition: condPractice1,
           left: [firstT, "attrA"], right: [secondT, "attrB"], mix: "both" },
         { block: 4, name: "區段 4 / 7（正式測驗）", trials: 40, condition: condTest1,
           left: [firstT, "attrA"], right: [secondT, "attrB"], mix: "both" },
-        { block: 5, name: "區段 5 / 7（練習）", trials: 20, condition: "practice_target_switch",
+        { block: 5, name: "區段 5 / 7（互換練習）", trials: 20, condition: "practice_target_switch",
           left: [secondT], right: [firstT], mix: "target" },
-        { block: 6, name: "區段 6 / 7（正式測驗）", trials: 20, condition: condPractice2,
+        { block: 6, name: "區段 6 / 7（練習）", trials: 20, condition: condPractice2,
           left: [secondT, "attrA"], right: [firstT, "attrB"], mix: "both" },
         { block: 7, name: "區段 7 / 7（正式測驗）", trials: 40, condition: condTest2,
           left: [secondT, "attrA"], right: [firstT, "attrB"], mix: "both" }
@@ -223,7 +223,6 @@
         attemptNum = document.getElementById("attempt").value;
         participantId = val + "_第" + attemptNum + "次";
 
-        // 每次重新整理網頁隨機指派先出現配對 A 或配對 B（確保重整幾次會輪流出現 A 與 B）
         const isRev = Math.random() < 0.5;
         orderCondition = isRev ? "B_first" : "A_first";
         blocks = buildBlocks(isRev);
