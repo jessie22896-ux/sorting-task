@@ -66,7 +66,7 @@
     .card h2 { margin-top: 0; font-size: 22px; color: #f8fafc; }
     .input-group { margin: 16px 0; }
     .input-group label { display: block; font-size: 14px; color: #cbd5e1; margin-bottom: 6px; }
-    .input-group input {
+    .input-group input, .input-group select {
       width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569;
       background: #0f172a; color: #f8fafc; font-size: 16px;
     }
@@ -112,7 +112,7 @@
       }
     };
 
-    // ====== 標準 7 區段設計（共 180 題，對應 D 分數計算區段 3, 4, 6, 7）======
+    // ====== 標準 7 區段設計（共 180 題：20, 20, 20, 40, 20, 20, 40）======
     function buildBlocks(isReversedFirst) {
       const firstT = isReversedFirst ? "targetB" : "targetA";
       const secondT = isReversedFirst ? "targetA" : "targetB";
@@ -140,6 +140,7 @@
     }
 
     let participantId = "";
+    let attemptNum = "1";
     let orderCondition = "A_first";
     let blocks = [];
     let currentBlockIdx = 0;
@@ -196,7 +197,7 @@
       app.innerHTML = `
         <div class="card">
           <h2>詞彙快速分類作業</h2>
-          <p>歡迎參與本次研究測驗！本測驗共分為 <strong>7 個區段</strong>（約 3～5 分鐘），請您依照畫面上方的類別提示，盡快且準確地將螢幕中央出現的詞彙歸類到<strong>左側</strong>或<strong>右側</strong>。</p>
+          <p>歡迎參與本次詞彙分類測驗！本測驗共分為 <strong>7 個區段</strong>（約 3～5 分鐘），請您依照畫面上方的類別提示，盡快且準確地將螢幕中央出現的詞彙歸類到<strong>左側</strong>或<strong>右側</strong>。</p>
           <ul>
             <li><strong>電腦操作：</strong>按鍵盤 <kbd>E</kbd> 鍵（選左邊）或 <kbd>I</kbd> 鍵（選右邊）。</li>
             <li><strong>手機操作：</strong>直接點擊畫面下方的「左側」或「右側」按鈕。</li>
@@ -206,16 +207,24 @@
             <label for="pid">請輸入受測者代碼（請勿填寫真實姓名或學號，例如：P01、P02）：</label>
             <input type="text" id="pid" placeholder="例如：P01" maxlength="20" />
           </div>
+          <div class="input-group">
+            <label for="attempt">請選擇本次作答次數：</label>
+            <select id="attempt">
+              <option value="1">第 1 次</option>
+              <option value="2">第 2 次</option>
+            </select>
+          </div>
           <button class="primary-btn" id="startBtn">開始測驗</button>
         </div>
       `;
       document.getElementById("startBtn").onclick = () => {
         const val = document.getElementById("pid").value.trim();
         if (!val) { alert("請先輸入受測者代碼！"); return; }
-        participantId = val;
-        const lastChar = participantId.slice(-1);
-        const num = parseInt(lastChar, 10);
-        const isRev = !isNaN(num) ? (num % 2 === 0) : (Math.random() < 0.5);
+        attemptNum = document.getElementById("attempt").value;
+        participantId = val + "_第" + attemptNum + "次";
+
+        // 每次重新整理網頁隨機指派先出現配對 A 或配對 B（確保重整幾次會輪流出現 A 與 B）
+        const isRev = Math.random() < 0.5;
         orderCondition = isRev ? "B_first" : "A_first";
         blocks = buildBlocks(isRev);
         currentBlockIdx = 0;
